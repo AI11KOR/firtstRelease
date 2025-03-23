@@ -34,8 +34,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, './public')));
 
 
+// app.get('/', (req, res) => {
+//     res.sendFile(__dirname + '/index.html')
+// })
+
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html')
+    res.render('auth/register.ejs')
 })
 
 app.use((req, res, next) => {
@@ -45,6 +49,9 @@ app.use((req, res, next) => {
 
 app.use('/', authRouter)
 app.use('/', postRouter)
+
+console.log('GOOGLE_CLIENT_ID:', process.env.GOOGLE_CLIENT_ID);
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`)
