@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/main.css" />
+    <title>Document</title>
+</head>
+<body class="grey-bg">
+
+    <%- include('../nav.ejs') %>
+    
+    <form class="form-box" action="/edit?_method=PUT" method="POST">
+        <h4>수정하기</h4>
+        <input class="input" name="id" value="<%= post._id %>">
+        <input class="input" name="title" value="<%= post.title %>">
+        <input class="input" name="content" value="<%= post.content %>">
+        <input type="file" id="img" accept="image/*" />
+        <% if( post.imageURL ) { %>
+            <img id="previewImg" src="<%=post.imageURL %>" style="width:200px;height:200px;border-radius:50%;object-fit:cover;"/>
+        <% } else { %>
+            <div id="preview"  style="width:200px;height:200px;border-radius:50%;border:1px solid #eee;"></div>
+        <% } %>
+        
+        <button class="button" type="submit">전송</button>
+    </form> 
+
+    <script>
+        document.querySelector('#img').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = (event) => {
+                let previewImg = document.querySelector('#previewImg');
+                if(previewImg) {
+                    previewImg.src = event.target.result;
+                } else {
+                    const previewDiv = document.querySelector('#preview');
+                    previewDiv.innerHTML = `<img src="${event.target.result}" 
+                    style=width:200px;height:200px;border-radius:50%;object-fit:cover;
+                    />`
+                }  
+            }
+            if(file) {
+                reader.readAsDataURL(file)
+            }
+        })
+    </script>
+</body>
+</html>

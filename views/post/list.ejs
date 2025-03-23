@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/main.css" />
+    <title>Document</title>
+</head>
+<body class="grey-bg">
+
+    <%- include('../nav.ejs') %>
+    
+        <div class="white-bg"> 
+            <div class="list-box">
+                <% for (let i = 0; i < post.length; i ++) { %>
+                <div style="display:flex; justify-content:space-between">
+                    
+                        <div>
+                            <h4 data-id="<%= post[i]._id %>" class="detail" style="cursor:pointer;"><%= post[i].title %></h4>
+                            <p><%= post[i].content %></p>
+                            <a data-id="<%= post[i]._id %>" class="edit" style="cursor:pointer;">글 수정하기</a>
+                            <a data-id="<%= post[i]._id %>" class="delete" style="cursor:pointer;">글 삭제하기</a>
+                        </div>
+                        
+                        <% if(post[i].imageURL) { %>
+                            <img src="<%= post[i].imageURL %>" style="width:50px;height:50px;border-radius:50%;object-fit:cover;"/>
+                        <% } else { %>
+                            <div style="width:50px;height:50px;border-radius:50%;border:1px solid #eee;"></div>
+                        <% } %>
+                    </div>
+                    <% } %>
+            </div>        
+      </div> 
+
+      <script>
+        // 글 삭제하기
+        document.querySelectorAll('.delete').forEach((link) => {
+            link.addEventListener('click', (e) => {
+                const docid = e.target.dataset.id;
+
+                const isConfirmed = confirm('정말 삭제하시겠습니까?')
+
+                // const postId = req.query.docid 이 부분은 delete/docid이다 그리고 그 값이 + 뒤에붙여진 docid로 바뀐다 
+                // 가령 + docid가 abc123이라면 delete?docid 는 abc123 이라는 값을 갖는다 그리고 그걸 받은 postId = req.query.docid는 역시 abc123의값이 된다
+                fetch('/delete?docid=' + docid, {
+                    method: 'DELETE',
+                })
+                .then((res) => res.text())
+                .then((data) => {
+                    console.log(data);
+                    alert(data);
+                    location.reload();
+                })
+            })
+        })
+        // 수정 페이지 이동
+        document.querySelectorAll('.edit').forEach((link) => {
+            link.addEventListener('click', (e) => {
+                const edit = e.target.dataset.id;
+                window.location.href = `/edit/${edit}`
+            })
+        })
+
+        // 상세 페이지 이동
+        document.querySelectorAll('.detail').forEach((link) => {
+            link.addEventListener('click', (e) => {
+                const postId = e.target.dataset.id
+
+                window.location.href = `/detail/${postId}`
+            })
+        })
+      </script>
+</body>
+</html>

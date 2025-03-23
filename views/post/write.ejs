@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/main.css" />
+    <title>Document</title>
+</head>
+<body class="grey-bg">
+
+    <%- include('../nav.ejs') %>
+    
+    <form class="form-box" action="/add" method="POST" enctype="multipart/form-data">
+        <h4>글쓰기</h4>
+        <input class="input" name="title" placeholder="제목을 적어주세요">
+        <input class="input" name="content" placeholder="내용을 적어주세요">
+        <input type="file" id="img" name="img" accept="image/*" />
+        <div id="preview" style="width:200px;height:200px;border-radius:50%;border:1px solid #eee;"></div>
+        <button class="button" type="submit">전송</button>
+    </form> 
+
+    <script>
+
+        // 이미지 미리보기
+        document.querySelector('#img').addEventListener('change', (e) => {
+            const file = e.target.files[0]
+            const reader = new FileReader();
+
+            reader.onload = (event) => {
+                const previewDiv = document.querySelector('#preview');
+                previewDiv.innerHTML = `<img src=${event.target.result}
+                style="width:200px;height:200px;border-radius:50%;object-fit:cover;"
+                />`
+            }
+            if(file) {
+                reader.readAsDataURL(file);
+            }
+            
+        })
+
+        // 유효성 검사
+        document.querySelector('.form-box').addEventListener('submit', (e) => {
+            const inputs = document.querySelectorAll('.input');
+            let isEmpty = false;
+
+            inputs.forEach((input) => {
+                if(input.value.trim() === '') {
+                    isEmpty = true;
+                }
+            });
+            if(isEmpty) {
+                alert('글자를 적어주세요');
+                e.preventDefault();
+            }
+            
+        })
+    </script>
+
+</body>
+</html>

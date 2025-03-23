@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/main.css" />
+    <title>Document</title>
+</head>
+<body class="grey-bg">
+
+    <%- include('../nav.ejs') %>
+    
+        <form class="form-box" action="/register" method="POST">
+            <h4>가입</h4>
+            <input name="username">
+            <input name="password" type="password">
+            <button type="submit">전송</button>
+        </form> 
+
+        <script>
+            document.querySelector('.form-box').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const username = e.target.username.value.trim();
+                const password = e.target.password.value.trim();
+
+                if(!username || !password) {
+                    alert('글자를 적어주세요');
+                    return;
+                }
+
+                const res = await fetch('/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                })
+
+                if(res.status === 403) {
+                    const text = res.text();
+                    alert(text)
+                }
+
+                if(res.ok) {
+                    const data = await res.json();
+                    location.href= data.redirect;
+                }
+            })
+        </script>
+</body>
+</html>

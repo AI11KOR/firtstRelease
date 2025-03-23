@@ -1,0 +1,6 @@
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    if(urlParams.get('error') === 'needLogin') {
+        alert('로그인이 필요합니다.')
+    }
+</script>
